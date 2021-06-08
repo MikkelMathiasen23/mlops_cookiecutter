@@ -1,6 +1,5 @@
 import sys
 import argparse
-import os
 
 import torch
 import numpy as np
@@ -101,7 +100,7 @@ class TrainOREvaluate(object):
     #Log model graph
     writer.add_graph(model, input_to_model=images)
 
-    fig = plt.figure()
+    plt.figure()
     x = np.arange(steps)
     plt.plot(x, train_losses, label='Train loss')
     plt.legend(loc='upper right')

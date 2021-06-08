@@ -1,4 +1,4 @@
-from torch.nn.modules.container import ModuleList, Sequential
+from torch.nn.modules.container import Sequential
 from src.models.model import MNIST_NET
 from src.data.make_dataset import mnist
 import torch
