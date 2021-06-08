@@ -16,5 +16,4 @@ argparse
 numpy
 logging == 0.4.9.6
 pathlib == 1.0.1
-python-math 0.0.1
 wandb
