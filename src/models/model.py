@@ -40,7 +40,7 @@ class MNIST_NET(nn.Module):
 
     for m in self.classifier.children():
       if isinstance(m, nn.Linear):
-        nn.init.xavier_uniform(m.weight)
+        nn.init.xavier_uniform_(m.weight)
       elif isinstance(m, nn.BatchNorm1d):
         m.weight.data.fill_(1)
         m.bias.data.zero_()
