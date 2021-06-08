@@ -14,7 +14,7 @@ matplotlib
 os-sys
 argparse
 numpy
-logging = 0.4.9.6
+logging == 0.4.9.6
 pathlib
 dotenv
 math
