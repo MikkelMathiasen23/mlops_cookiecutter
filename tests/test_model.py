@@ -5,7 +5,9 @@ import torch
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 trainset, _ = mnist()
 
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
+trainloader = torch.utils.data.DataLoader(trainset,
+                                          batch_size=64,
+                                          shuffle=True)
 
 model = MNIST_NET().to(device)
 

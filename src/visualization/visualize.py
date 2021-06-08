@@ -30,14 +30,14 @@ model2 = nn.Sequential(*modules2)
 out = []
 lab = []
 with torch.no_grad():
-  # validation pass here
-  model.eval()
-  for batch_idx, (images, labels) in enumerate(testloader):
-    x = model(images)
-    x = x.view(x.size(0), -1)
-    x = model2(x)
-    out.append(x)
-    lab.append(labels)
+    # validation pass here
+    model.eval()
+    for batch_idx, (images, labels) in enumerate(testloader):
+        x = model(images)
+        x = x.view(x.size(0), -1)
+        x = model2(x)
+        out.append(x)
+        lab.append(labels)
 out = torch.cat(out, dim=0)
 lab = torch.cat(lab, dim=0)
 tsne = TSNE(args.n_components)
