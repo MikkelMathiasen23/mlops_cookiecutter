@@ -13,7 +13,6 @@ torchvision
 matplotlib
 os-sys
 argparse
-os
 numpy
 logging
 pathlib
