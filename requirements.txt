@@ -16,6 +16,5 @@ argparse
 numpy
 logging == 0.4.9.6
 pathlib
-dotenv
 math
 wandb
