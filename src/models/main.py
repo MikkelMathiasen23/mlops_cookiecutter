@@ -38,16 +38,13 @@ class TrainOREvaluate(object):
     parser = argparse.ArgumentParser(description='Training arguments')
     parser.add_argument('--lr', default=0.003)
     # add any additional argument that you want
-    parser.add_argument('--epoch', default=1)
+    parser.add_argument('--epoch', default=10)
     parser.add_argument('--model_version', default=00)
     parser.add_argument('--batch_size', default=64)
 
     args = parser.parse_args(sys.argv[2:])
     print(args)
     print('device: ', self.device)
-    model = MNIST_NET().to(self.device)
-    wandb.watch(model, log_freq=10)
-
     hyperparameters = {
         'batch_size': args.batch_size,
         'lr': args.lr,
@@ -55,7 +52,9 @@ class TrainOREvaluate(object):
     }
     wandb.init(config=hyperparameters)
 
-    criterion = nn.NLLLoss()
+    model = MNIST_NET().to(self.device)
+    wandb.watch(model, log_freq=10)
+    criterion = nn.CrossEntropyLoss()  #criterion = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
     trainset, _ = mnist()
