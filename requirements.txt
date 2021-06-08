@@ -13,6 +13,5 @@ torchvision
 matplotlib
 argparse
 numpy
-logging == 0.4.9.6
 pathlib == 1.0.1
 wandb
