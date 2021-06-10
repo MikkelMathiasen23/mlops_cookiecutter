@@ -2,7 +2,6 @@
 # import click
 import logging
 from pathlib import Path
-
 from dotenv import find_dotenv, load_dotenv
 from torchvision import datasets, transforms
 
@@ -33,14 +32,16 @@ def main():
 
 
 def mnist():
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-         transforms.Normalize((0.5, ), (0.5, ))])
+    transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, ), (0.5, ))
+    ])
 
     trainset = MNIST(data_dir, download=True, train=True, transform=transform)
     testset = MNIST(data_dir, download=True, train=False, transform=transform)
 
-    return trainset.clone(), testset.clone()
+    return trainset, testset
 
 
 if __name__ == '__main__':
