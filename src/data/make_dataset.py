@@ -40,7 +40,7 @@ def mnist():
     trainset = MNIST(data_dir, download=True, train=True, transform=transform)
     testset = MNIST(data_dir, download=True, train=False, transform=transform)
 
-    return trainset, testset
+    return trainset.clone(), testset.clone()
 
 
 if __name__ == '__main__':
