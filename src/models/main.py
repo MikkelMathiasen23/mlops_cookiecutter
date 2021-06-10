@@ -1,14 +1,15 @@
-import sys
 import argparse
+import sys
 
-import torch
-import numpy as np
 import matplotlib.pyplot as plt
-from src.models.model import MNIST_NET
+import numpy as np
+import torch
 from torch import nn, optim
 from torch.utils.tensorboard import SummaryWriter
+
 import wandb
 from src.data.make_dataset import mnist
+from src.models.model import MNIST_NET
 
 writer = SummaryWriter()
 
@@ -54,7 +55,7 @@ class TrainOREvaluate(object):
 
         model = MNIST_NET().to(self.device)
         wandb.watch(model, log_freq=10)
-        criterion = nn.CrossEntropyLoss()  #criterion = nn.NLLLoss()
+        criterion = nn.CrossEntropyLoss()  # criterion = nn.NLLLoss()
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
         trainset, _ = mnist()
@@ -89,10 +90,10 @@ class TrainOREvaluate(object):
                 running_loss += loss
 
                 train_losses.append(loss.item())
-                #Log train loss
+                # Log train loss
                 writer.add_scalar('Loss/train', loss, batch_idx * (e + 1))
                 wandb.log({"loss": loss})
-                #Log class probabilities
+                # Log class probabilities
                 writer.add_histogram('Class probabilities', log_ps.flatten(),
                                      batch_idx * (e + 1))
             print("Train loss:", running_loss.item())
@@ -100,9 +101,9 @@ class TrainOREvaluate(object):
         torch.save(model.state_dict(),
                    'models/' + str(args.model_version) + '_checkpoint.pth')
 
-        #Log model graph
+        # Log model graph
         writer.add_graph(model, input_to_model=images)
-
+        writer.add_hparams(hyperparameters, {'steps': steps})
         plt.figure()
         x = np.arange(steps)
         plt.plot(x, train_losses, label='Train loss')
@@ -132,7 +133,6 @@ class TrainOREvaluate(object):
 
         with torch.no_grad():
             # validation pass here
-            running_loss = 0
             accuracy = 0
             model.eval()
             for batch_idx, (images, labels) in enumerate(testloader):

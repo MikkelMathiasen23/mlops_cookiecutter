@@ -1,14 +1,15 @@
-from torch.nn.modules.container import Sequential
-from src.models.model import MNIST_NET
-from src.data.make_dataset import mnist
-import torch
-import torch.nn as nn
 import argparse
 import sys
-import pandas as pd
+
 import matplotlib.pyplot as plt
-from sklearn.manifold import TSNE
+import pandas as pd
 import seaborn as sns
+import torch
+import torch.nn as nn
+from sklearn.manifold import TSNE
+
+from src.data.make_dataset import mnist
+from src.models.model import MNIST_NET
 
 parser = argparse.ArgumentParser(description='Training arguments')
 parser.add_argument('--modelpath', default='models/0_checkpoint.pth')

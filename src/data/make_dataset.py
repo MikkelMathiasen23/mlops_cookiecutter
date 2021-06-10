@@ -2,14 +2,15 @@
 # import click
 import logging
 from pathlib import Path
+
 from dotenv import find_dotenv, load_dotenv
 from torchvision import datasets, transforms
 
 data_dir = '../../data'
 
-#@click.command()
-#@click.argument('input_filepath', type=click.Path(exists=True))
-#@click.argument('output_filepath', type=click.Path())
+# @click.command()
+# @click.argument('input_filepath', type=click.Path(exists=True))
+# @click.argument('output_filepath', type=click.Path())
 
 
 class MNIST(datasets.MNIST):

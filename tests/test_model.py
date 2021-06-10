@@ -1,6 +1,7 @@
-from src.models.model import MNIST_NET
-from src.data.make_dataset import mnist
 import torch
+
+from src.data.make_dataset import mnist
+from src.models.model import MNIST_NET
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 trainset, _ = mnist()

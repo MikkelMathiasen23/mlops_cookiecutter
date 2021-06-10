@@ -1,0 +1,26 @@
+{
+    "os": "Linux-5.4.109+-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.7.10",
+    "heartbeatAt": "2021-06-08T17:43:09.830885",
+    "startedAt": "2021-06-08T17:43:03.781263",
+    "docker": null,
+    "gpu": "Tesla P4",
+    "gpu_count": 1,
+    "cpu_count": 2,
+    "cuda": "11.0.228",
+    "args": [
+        "train"
+    ],
+    "state": "running",
+    "program": "src/models/main.py",
+    "codePath": "src/models/main.py",
+    "git": {
+        "remote": "https://github.com/MikkelMathiasen23/mlops_cookiecutter",
+        "commit": "75da0cf2a0d67318594330fc863e5da5ab27f7b0"
+    },
+    "email": null,
+    "root": "/content/drive/MyDrive/Mathematical modelling and computation/2. semester/MLOps/mlops_cookiecutter/mlops_cookiecutter",
+    "host": "a482ec7d4b66",
+    "username": "root",
+    "executable": "/usr/bin/python3"
+}

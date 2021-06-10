@@ -1,5 +1,6 @@
-from src.data.make_dataset import mnist
 import torch
+
+from src.data.make_dataset import mnist
 
 trainset, testset = mnist()
 
