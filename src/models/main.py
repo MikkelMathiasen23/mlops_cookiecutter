@@ -10,6 +10,7 @@ from torch.utils.tensorboard import SummaryWriter
 import wandb
 from src.data.make_dataset import mnist
 from src.models.model import MNIST_NET
+import time
 
 writer = SummaryWriter()
 
@@ -111,6 +112,31 @@ class TrainOREvaluate(object):
         plt.savefig('reports/figures/train_loss.png')
 
         return train_losses
+
+    def para(self):
+        parser = argparse.ArgumentParser(description='Parallel arguments')
+        parser.add_argument('--batch_size', default=64)
+        parser.add_argument('--rep', default=1)
+        args = parser.parse_args(sys.argv[2:])
+        model = nn.DataParallel(MNIST_NET().to(self.device))
+        model_no = (MNIST_NET().to(self.device))
+        trainset, _ = mnist()
+
+        trainloader = torch.utils.data.DataLoader(trainset,
+                                                  batch_size=int(
+                                                      args.batch_size),
+                                                  shuffle=True)
+        batch, _ = next(iter(trainloader))
+
+        start = time.time()
+        for r in range(int(args.rep)):
+            model(batch)
+        end = time.time()
+        print('Timing parallel: ', end - start)
+        for r in range(int(args.rep)):
+            model_no(batch)
+        end = time.time()
+        print('Timing original: ', end - start)
 
     def evaluate(self):
         print("Evaluating until hitting the ceiling")
