@@ -1,6 +1,5 @@
 import argparse
 import sys
-from pytorch_lightning import callbacks
 import torch
 from torch import nn, optim
 from src.data.make_dataset import mnist
@@ -10,6 +9,9 @@ from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import Callback
 import pytorch_lightning as pl
 import math
+import torchdrift
+from sklearn.manifold import Isomap
+import matplotlib.pyplot as plt
 
 data_dir = 'data/'
 
@@ -89,15 +91,12 @@ class MNIST_model(pl.LightningModule):
 
 
 class MNISTDataModule(pl.LightningDataModule):
-    def __init__(self, batch_size: int = 32):
+    def __init__(self,
+                 batch_size: int = 32,
+                 additional_transform: str = False):
         super().__init__()
         self.batch_size = batch_size
-
-    def prepare_data(self):
-        MNIST(data_dir, download=True, train=True)
-        MNIST(data_dir, download=True, train=False)
-
-    def setup(self, stage: str = None):
+        self.additional_transform = additional_transform
         transform = transforms.Compose(
             [transforms.ToTensor(),
              transforms.Normalize((0.5, ), (0.5, ))])
@@ -111,16 +110,34 @@ class MNISTDataModule(pl.LightningDataModule):
                              train=False,
                              transform=transform)
 
+    def collate_fn(self, batch):
+        batch = torch.utils.data._utils.collate.default_collate(batch)
+        if self.additional_transform:
+            batch = (self.corruption_function(batch[0]), *batch[1:])
+        return batch
+
+    def prepare_data(self):
+        MNIST(data_dir, download=True, train=True)
+        MNIST(data_dir, download=True, train=False)
+
+    def corruption_function(self, x: torch.Tensor):
+        return torchdrift.data.functional.gaussian_blur(x, severity=2)
+
+    def setup(self, stage: str = None):
+        pass
+
     def train_dataloader(self):
         trainloader = torch.utils.data.DataLoader(self.trainset,
                                                   batch_size=self.batch_size,
-                                                  shuffle=True)
+                                                  shuffle=True,
+                                                  collate_fn=self.collate_fn)
         return trainloader
 
     def test_dataloader(self):
         testsetloader = torch.utils.data.DataLoader(self.testset,
                                                     batch_size=self.batch_size,
-                                                    shuffle=True)
+                                                    shuffle=True,
+                                                    collate_fn=self.collate_fn)
         return testsetloader
 
 
@@ -132,16 +149,43 @@ class PrintCallback(Callback):
         print("Training is done.")
 
 
+def driftdetector():
+    drift_detector = torchdrift.detectors.KernelMMDDriftDetector()
+    return drift_detector
+
+
 if __name__ == '__main__':
+    drift = driftdetector()
+    mapper = Isomap(n_components=2)
+
+    #Load data:
     data = MNISTDataModule()
+    ood_data = MNISTDataModule(additional_transform=True)
+
     model = MNIST_model()
     wandb_logger = WandbLogger()
     callbacks = [PrintCallback()]
-    trainer = Trainer(logger=wandb_logger,
-                      max_epochs=1,
+    trainer = Trainer(max_epochs=1,
                       limit_train_batches=0.2,
                       accelerator='ddp',
-                      precision=16,
-                      gpus=1,
-                      callbacks=callbacks)
-    trainer.fit(model, data)
+                      gpus=None,
+                      callbacks=callbacks)  #logger=wandb_logger,
+    #trainer.fit(model, data)
+    torchdrift.utils.fit(ood_data.train_dataloader(), model, drift)
+    drift_model = nn.Sequential(model, drift)
+    print('1')
+    ###Visualize:
+    inputs, _ = next(iter(ood_data.train_dataloader()))
+    print('1')
+    score = drift_model(inputs)
+    print('1')
+    p_val = drift_model.compute_p_value(inputs)
+    print('1')
+    base_embedded = mapper.fit_transform(drift_model.base_outputs)
+    print('1')
+    features_embedded = mapper.transform(inputs)
+    print('1')
+    plt.scatter(base_embedded[:, 0], base_embedded[:, 1], s=2, c='r')
+    plt.scatter(features_embedded[:, 0], features_embedded[:, 1], s=4)
+    plt.title(f'score {score:.2f} p-value {p_val:.2f}')
+    plt.savefig('reports/figures/isomap.png')

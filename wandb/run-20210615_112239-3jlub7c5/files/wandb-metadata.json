@@ -1,0 +1,22 @@
+{
+    "os": "Windows-10-10.0.19041-SP0",
+    "python": "3.8.5",
+    "heartbeatAt": "2021-06-15T09:22:43.724080",
+    "startedAt": "2021-06-15T09:22:39.000263",
+    "docker": null,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "c:/Users/Mikkel/Google Drive/Mathematical modelling and computation/2. semester/MLOps/mlops_cookiecutter/mlops_cookiecutter/src/models/main_pl.py",
+    "codePath": "src\\models\\main_pl.py",
+    "git": {
+        "remote": "https://github.com/MikkelMathiasen23/mlops_cookiecutter",
+        "commit": "b7c4e01c165e835603e9aecc8720c900cf4c1ee5"
+    },
+    "email": "s174344@student.dtu.dk",
+    "root": "C:/Users/Mikkel/Google Drive/Mathematical modelling and computation/2. semester/MLOps/mlops_cookiecutter/mlops_cookiecutter",
+    "host": "LAPTOP-TOS2QK5Q",
+    "username": "Mikkel",
+    "executable": "C:\\Users\\Mikkel\\anaconda3\\python.exe"
+}
